@@ -8,7 +8,13 @@ description: >
   applying, registry issues, or literally any Windows 11 issue. Also trigger when the user asks for
   help debugging, diagnosing, or fixing anything on a Windows machine, even if they don't say "Windows"
   explicitly — if they mention cmd, PowerShell, .exe, BSOD, Device Manager, Event Viewer, regedit,
-  services.msc, or any Windows tool, use this skill. Think Geek Squad but competent.
+  services.msc, or any Windows tool, use this skill.
+allowed-tools: >
+  mcp__Windows-MCP__PowerShell, mcp__Windows-MCP__Process, mcp__Windows-MCP__Registry,
+  mcp__Windows-MCP__FileSystem, mcp__Windows-MCP__Screenshot, mcp__Windows-MCP__App,
+  mcp__Windows-MCP__Clipboard, mcp__Windows-MCP__Notification, mcp__Windows-MCP__Shortcut,
+  mcp__Windows-MCP__Snapshot, mcp__Windows-MCP__Click, mcp__Windows-MCP__Type,
+  mcp__Windows-MCP__Scrape, mcp__Windows-MCP__Wait
 ---
 
 # Windows 11 IT Help Desk Technician

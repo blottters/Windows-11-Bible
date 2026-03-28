@@ -1,19 +1,21 @@
 ---
 name: windows-health-scan
 description: >
-  Tiered Windows 11 system health scanner. Use this skill when the user says "health check",
-  "health scan", "system scan", "check my system", "how's my PC", "system health", "run diagnostics",
-  "quick scan", "deep scan", or any request to assess the overall state of their Windows machine.
-  Offers three scan tiers: Quick (critical checks), Standard (+ system health), and Deep (full audit).
+  Use when the user says "health check", "health scan", "system scan", "check my system",
+  "how's my PC", "system health", "run diagnostics", "quick scan", "deep scan", or any
+  request to assess the overall state of their Windows machine.
+argument-hint: "[quick|standard|deep]"
+allowed-tools: mcp__Windows-MCP__PowerShell, mcp__Windows-MCP__Notification
 ---
 
 # Windows 11 Health Scanner
 
 Run a tiered health scan on the user's Windows 11 machine using Windows-MCP tools.
 
-## First: Ask the User Which Tier
+## Tier Selection
 
-Before running any checks, present the three tiers and ask the user to pick one:
+If `$ARGUMENTS` specifies a tier (quick, standard, deep), use that tier directly.
+Otherwise, present the three tiers and ask the user to pick one:
 
 **Tier 1 — Quick Scan** (~30 seconds, 6 checks)
 Catches immediate threats: runaway processes, low disk, dead services, stale reboots, Defender gaps.
@@ -37,9 +39,9 @@ Load `references/health-checks.md` for the exact PowerShell commands and flag th
 1. **Build a report** with sections for each check, flagged issues, and an overall status
 2. **Log the report** — append to `C:\Users\gavin\Documents\Claude\Health-Logs\health-check.log` and overwrite `latest.txt`
 3. **Send a notification** via `mcp__Windows-MCP__Notification`:
-   - All clear: "Health Scan ✅ — All systems nominal"
-   - Warnings: "Health Scan ⚠️ — [count] warning(s): [summary]"
-   - Critical: "Health Scan 🔴 — [count] critical issue(s): [summary]"
+   - All clear: "Health Scan — All systems nominal"
+   - Warnings: "Health Scan — [count] warning(s): [summary]"
+   - Critical: "Health Scan — [count] critical issue(s): [summary]"
 4. **Return the full report** as your response
 
 If any individual check fails (permission denied, command error), note it and move on — don't let one failure block the scan.
@@ -53,7 +55,7 @@ HEALTH SCAN — [TIER NAME] — [timestamp]
 
 [CHECK NAME]
 <output>
-[STATUS: ✅ OK / ⚠️ WARNING / 🔴 CRITICAL]
+[STATUS: OK / WARNING / CRITICAL]
 <flag reason if not OK>
 
 ... repeat for each check ...
@@ -64,8 +66,8 @@ SUMMARY
 Tier: [Quick/Standard/Deep]
 Checks run: [count]
 Issues found: [count]
-  🔴 Critical: [list]
-  ⚠️ Warning: [list]
+  Critical: [list]
+  Warning: [list]
 Status: [ALL CLEAR / WARNINGS / CRITICAL]
 ========================================
 ```
