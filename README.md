@@ -1,6 +1,6 @@
 # Windows 11 Troubleshooting Bible
 
-A comprehensive, Claude-optimized reference for diagnosing and fixing Windows 11 issues. Built as both a standalone knowledge base and an AI-powered IT help desk skill.
+A comprehensive troubleshooting reference built for **Claude Cowork** — Anthropic's desktop tool for non-developers to automate file and task management. Designed as a drop-in skill that turns Claude into a fully capable Windows 11 IT help desk technician, powered by Windows-MCP for live diagnosis.
 
 ## What's Inside
 
@@ -28,6 +28,16 @@ A comprehensive, Claude-optimized reference for diagnosing and fixing Windows 11
 | Ch18 | CBS logs, DISM internals, TSS diagnostic toolkit |
 
 
+## How It Works with Cowork
+
+This repo is designed around Claude Cowork's skill system and MCP (Model Context Protocol) architecture:
+
+- **Skill auto-triggers** when you describe any Windows problem in a Cowork session
+- **Windows-MCP integration** lets Claude run PowerShell, inspect processes, read the registry, and capture screenshots directly on your machine — no copy-pasting commands
+- **Chapter-based lazy loading** keeps context window efficient — Claude reads INDEX.md first, then loads only the 1-3 chapters relevant to your problem
+- **Scheduled health checks** run automatically every 4 hours via Cowork's scheduled tasks, logging results and sending Windows desktop notifications
+- **Desktop Commander** handles file operations when Windows-MCP needs support
+
 ## Repo Structure
 
 ```
@@ -37,38 +47,62 @@ A comprehensive, Claude-optimized reference for diagnosing and fixing Windows 11
 ├── HEALTH-CHECK.md                        # Automated 4-hour health check setup
 ├── chapters/                              # Individual chapter files
 │   ├── INDEX.md                           # Problem → Chapter routing table
-│   ├── Ch01-PowerShell.md
-│   ├── ...
-│   ├── Ch18-CBS-DISM-TSS.md
-│   └── Appendices.md
-└── skill/                                 # Claude Code skill (drop-in ready)
+│   ├── Ch01-PowerShell.md ... Ch18        # 18 focused chapters
+│   └── Appendices.md                      # Shortcuts, glossary, sources
+└── skill/                                 # Cowork skill (drop-in ready)
     ├── SKILL.md                           # Skill definition + diagnostic protocol
     └── references/                        # Chapter files loaded on demand
         ├── INDEX.md
-        ├── Ch01-PowerShell.md
-        └── ...
+        ├── Ch01 ... Ch18
+        └── Appendices.md
 ```
 
-## How to Use
 
-### As a Claude Skill (recommended)
-Copy the `skill/` folder into your Claude Code skills directory:
-```
-~/.claude/skills/windows-it-tech/
-```
-Claude will automatically activate it when you describe any Windows problem.
+## Setup
 
-### As a System Prompt
-Paste the contents of `SYSTEM-PROMPT.md` into Claude's system prompt field. Uses RISEN+ReAct framework for structured diagnosis.
+### Cowork Skill (recommended)
 
-### As a Reference
-Read `Windows-11-Troubleshooting-Bible.md` directly, or browse individual chapters in `chapters/`.
+The skill is already installed if you cloned this from the original Cowork session. To install manually:
 
-### Automated Health Monitoring
-See `HEALTH-CHECK.md` for setting up a 4-hour recurring health check via Claude's scheduled tasks.
+1. Copy the `skill/` folder contents into your Cowork skills directory:
+   ```
+   %USERPROFILE%\.claude\skills\windows-it-tech\
+   ```
+2. The folder should contain `SKILL.md` and a `references/` subdirectory with all chapter files
+3. Claude will automatically activate the skill when you describe any Windows problem
+
+### Required MCP: Windows-MCP
+
+For live diagnosis (Claude runs commands directly instead of telling you what to type), you need the [Windows-MCP](https://github.com/nicholasrubright/windows-mcp) server connected to your Cowork session. This provides:
+
+- `mcp__Windows-MCP__PowerShell` — run PowerShell commands
+- `mcp__Windows-MCP__Process` — inspect running processes
+- `mcp__Windows-MCP__Registry` — read/write registry keys
+- `mcp__Windows-MCP__FileSystem` — read/write/check files
+- `mcp__Windows-MCP__Screenshot` — capture screen state
+- `mcp__Windows-MCP__Notification` — send desktop notifications
+- Plus: App, Clipboard, Shortcut, Snapshot, Click, Type, Scrape, Wait
+
+### Optional: Desktop Commander MCP
+
+[Desktop Commander](https://github.com/nicholasrubright/desktop-commander) adds process management, file search, and directory operations that complement Windows-MCP. Used by the health check system for logging.
+
+### Scheduled Health Check
+
+See `HEALTH-CHECK.md` for setting up the 4-hour recurring health check via Cowork's `mcp__scheduled-tasks__create_scheduled_task`. Monitors RAM, disk, updates, services, and event log errors — logs to `%USERPROFILE%\Documents\Claude\Health-Logs\`.
 
 
-## Sections Overview
+## Alternative Usage
+
+### System Prompt (Claude.ai or API)
+
+If you're not using Cowork, paste the contents of `SYSTEM-PROMPT.md` as a system prompt and attach the chapter files as project knowledge. The RISEN+ReAct framework still works — you just won't have live MCP diagnosis.
+
+### Standalone Reference
+
+Read `Windows-11-Troubleshooting-Bible.md` directly or browse individual chapters in `chapters/`. Works as a plain knowledge base even without Claude.
+
+## All 38 Sections
 
 1. PowerShell Profiles & Execution Policy
 2. PowerShell Remoting & WinRM
@@ -114,7 +148,8 @@ See `HEALTH-CHECK.md` for setting up a 4-hour recurring health check via Claude'
 ## Built With
 
 - Researched via Microsoft Docs MCP and hands-on Windows 11 troubleshooting
-- Structured for Claude's context window efficiency (chapter-based lazy loading)
+- Built in Claude Cowork with Windows-MCP + Desktop Commander for live testing
+- Structured for chapter-based lazy loading (context window efficiency)
 - RISEN+ReAct prompt engineering for systematic diagnosis
 
 ## License

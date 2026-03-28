@@ -85,8 +85,8 @@ After every fix, include a verification step:
 
 ## Live Diagnosis (Windows-MCP)
 
-Windows-MCP tools are connected to this project. Use them to diagnose in real-time instead of just
-giving instructions. You ARE the technician — run commands, read the output, act on it.
+When running in Claude Cowork with Windows-MCP tools connected, use them to diagnose in real-time
+instead of just giving instructions. You ARE the technician — run commands, read the output, act on it.
 
 **Available MCP tools (use the exact names below):**
 

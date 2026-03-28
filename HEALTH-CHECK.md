@@ -1,4 +1,11 @@
-# Windows 11 Health Check — Scheduled Task
+# Windows 11 Health Check (Claude Cowork)
+
+> **Requires:** Claude Cowork + Windows-MCP + Cowork scheduled tasks (`mcp__scheduled-tasks__create_scheduled_task`)
+> This is a Cowork-specific feature. The scheduled task runs autonomously inside Cowork sessions, executing Windows-MCP commands on your machine and logging results locally.
+
+---
+
+# Health Check Details — Scheduled Task
 
 **Task ID:** `windows-health-check`
 **Schedule:** Every 4 hours (cron: `0 */4 * * *`)
